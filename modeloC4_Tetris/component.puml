@@ -5,7 +5,7 @@ title Diagrama de Componentes - Motor de Lógica del Sistema Tetris
 
 Container(ui, "Interfaz de Usuario", , "Muestra el tablero, tetrominos, puntuación, estado del juego y recibe las acciones del jugador")
 
-Container_Boundary(motor_juego_boundary, "Contenedor: Motor de Logica") {
+Container_Boundary(motor_juego_boundary, "Contenedor: Motor de Lógica") {
     
     Component(controlador_juego, "Controlador de Juego", "Controller", "Orquesta el flujo del juego, maneja el bucle principal (Game Loop), pausa, inicio, detención y la lógica de fin de juego")
     
@@ -24,9 +24,10 @@ Rel_U(controlador_juego, ui, "Actualiza el estado del juego, tablero, tetrominos
 Rel(controlador_juego, gestor_mov_col, "Solicita mover/rotar la pieza actual basándose en el temporizador o input")
 Rel(controlador_juego, generador_piezas, "Solicita una nueva pieza cuando la anterior se fija")
 Rel(controlador_juego, gestor_tablero, "Consulta y actualiza el estado del tablero")
+Rel(controlador_juego, gestor_puntuacion_niveles, "Solicita reiniciar o consultar puntuación y nivel")
 
 Rel(gestor_mov_col, gestor_tablero, "Consulta el estado de la matriz de 10x24 para verificar colisiones y solapamientos")
 Rel(gestor_tablero, gestor_puntuacion_niveles, "Informa cuántas líneas se completaron simultáneamente (1, 2, 3 o 4 líneas) y eliminaron para actualizar la puntuación")
-Rel(gestor_puntuacion_niveles, controlador_juego, "Ajusta el intervalo del temporizador (gravedad) cuando se sube de nivel")
+Rel(gestor_puntuacion_niveles, controlador_juego, "Notifica cambio de nivel para ajustar la velocidad del juego")
 
 @enduml
