@@ -1,0 +1,32 @@
+@startuml tetris-component
+title Diagrama de Componentes - Motor de Lógica del Sistema Tetris
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(ui, "Interfaz de Usuario", , "Muestra el tablero, tetrominos, puntuación, estado del juego y recibe las acciones del jugador")
+
+Container_Boundary(motor_juego_boundary, "Contenedor: Motor de Logica") {
+    
+    Component(controlador_juego, "Controlador de Juego", "Controller", "Orquesta el flujo del juego, maneja el bucle principal (Game Loop), pausa, inicio, detención y la lógica de fin de juego")
+    
+    Component(gestor_tablero, "Gestor de Tablero", "Game Logic Component", "Mantiene la matriz interna de 10x24. Valida los límites del tablero, bloquea piezas y procesa la eliminación de líneas llenas")
+    
+    Component(generador_piezas, "Generador de Tetrominos", "Game Logic Component", "Crea la pieza actual con colores aleatorios y gestiona la siguiente pieza en cola")
+    
+    Component(gestor_mov_col, "Gestor de Movimiento y Colisiones", "Game Logic Component", "Valida que las rotaciones de 90° y desplazamientos no se solapen con otras piezas fijadas ni se salgan de los bordes del tablero")
+
+    Component(gestor_puntuacion_niveles, "Gestor de Puntuación y Niveles", "Game Logic Component", "Calcula la puntuación basada en líneas eliminadas y actualiza el nivel para ajustar la velocidad del juego")    
+}
+
+Rel(ui, controlador_juego, "Envía comandos de entrada (teclado) e instrucciones de control de flujo")
+Rel_U(controlador_juego, ui, "Actualiza el estado del juego, tablero, tetrominos y puntuación")
+
+Rel(controlador_juego, gestor_mov_col, "Solicita mover/rotar la pieza actual basándose en el temporizador o input")
+Rel(controlador_juego, generador_piezas, "Solicita una nueva pieza cuando la anterior se fija")
+Rel(controlador_juego, gestor_tablero, "Consulta y actualiza el estado del tablero")
+
+Rel(gestor_mov_col, gestor_tablero, "Consulta el estado de la matriz de 10x24 para verificar colisiones y solapamientos")
+Rel(gestor_tablero, gestor_puntuacion_niveles, "Informa cuántas líneas se completaron simultáneamente (1, 2, 3 o 4 líneas) y eliminaron para actualizar la puntuación")
+Rel(gestor_puntuacion_niveles, controlador_juego, "Ajusta el intervalo del temporizador (gravedad) cuando se sube de nivel")
+
+@enduml

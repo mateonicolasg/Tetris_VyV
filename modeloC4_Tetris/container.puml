@@ -3,26 +3,17 @@ title Diagrama de Contenedores del Sistema Tetris
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-Person(player, "Jugador", "Persona que juega al Tetris")
+Person(jugador, "Jugador", "Usuario que interactúa con el videojuego")
 
-System_Boundary(tetris, "Tetris") {
+System_Boundary(sistema_tetris_boundary, "Sistema de juego Tetris") {
     Container(ui, "Interfaz de Usuario", , "Muestra el tablero, tetrominos, puntuación, estado del juego y recibe las acciones del jugador")
-    Container(game_engine, "Motor de Juego", ,"Gestiona el inicio, actualización, pausa/detención, fin del juego y coordinación de reglas")
-    Container(board_manager, "Motor del Tablero", ,"Valida posiciones, detecta colisiones, fija bloques y limpia filas completas")
-    Container(tetromino_manager, "Gestor de Tetrominós", ,"Gestiona la creación, movimiento y rotación de tetrominós")
-    Container(score_manager, "Gestor de Puntuación", ,"Calcula y actualiza la puntuación, nivel y estadísticas del jugador")
+    Container(motor_juego, "Motor de Lógica", ,"Gestiona el inicio, actualización, pausa, fin del juego y coordinación de reglas")
 
-    Rel(player, ui, "Usa controles para iniciar, mover, rotar, bajar y detener la partida")
+    Rel(jugador, ui, "Envia comandos de teclado para iniciar, mover, rotar, bajar y detener la partida")
 
-    Rel(ui, game_engine, "Envía acciones del jugador")
-    Rel(game_engine, ui, "Actualiza tablero, estado, puntuación y estadísticas")
+    Rel(ui, motor_juego, "Envía acciones del jugador")
+    Rel(motor_juego, ui, "Actualiza el estado del juego, tablero, tetrominos y puntuación")
 
-    Rel(game_engine, board_manager, "Consulta y actualiza el estado del tablero")
-    Rel(game_engine, tetromino_manager, "Solicita crear, mover y rotar tetrominos")
-    Rel(game_engine, score_manager, "Solicita actualizar puntuación, nivel y estadísticas")
-
-    Rel(tetromino_manager, board_manager, "Valida posiciones, límites y colisiones")
-    Rel(board_manager, score_manager, "Notifica filas completas eliminadas")
 }
 
 @enduml

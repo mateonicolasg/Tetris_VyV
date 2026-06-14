@@ -2,8 +2,9 @@
 title Diagrama de Contexto del Sistema Tetris
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
 
-Person(player, "Jugador", "Persona que juega al Tetris")
-System(tetris, "Tetris", "Juego de video clásico")
+Person(jugador, "Jugador", "Usuario que interactúa con el videojuego")
+System(sistemaTetris, "Sistema de juego Tetris", "Sistema que gestiona la lógica del juego, el tablero, los tetrominos y la puntuación")
 
-Rel(player, tetris, "Inicia partida, mueve y rota tetrominos, consulta el tablero y la puntuación")
+Rel(jugador, sistemaTetris, "Inicia partida, mueve y rota tetrominos, consulta el tablero y la puntuación")
+
 @enduml
