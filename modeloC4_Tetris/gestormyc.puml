@@ -1,0 +1,73 @@
+@startuml tetris-code-movement-collision
+title Diagrama de Código - Gestor de Movimiento y Colisiones
+
+class MovementCollisionManager {
+    - board: BoardManager
+    + canMove(piece: Tetromino, dx: int, dy: int): boolean
+    + canRotate(piece: Tetromino): boolean
+    + isInitialPlacementValid(piece: Tetromino): boolean
+    + applyMove(piece: Tetromino, dx: int, dy: int): void
+    + applyRotation(piece: Tetromino): void
+    - isWithinBounds(blocks: Block[]): boolean
+    - hasOverlap(blocks: Block[]): boolean
+}
+
+class Tetromino {
+    - type: TetrominoType
+    - blocks: Block[]
+    - rotationState: int
+    - rotationMatrices: int[][][]
+    + getBlocks(): Block[]
+    + getNextRotationBlocks(): Block[]
+    + moveTo(dx: int, dy: int): void
+    + rotate(): void
+    + getType(): TetrominoType
+}
+
+class Block {
+    - x: int
+    - y: int
+    + getX(): int
+    + getY(): int
+}
+
+enum TetrominoType {
+    I
+    O
+    T
+    S
+    Z
+    J
+    L
+}
+
+note right of MovementCollisionManager
+  R4: canMove() valida desplazamiento
+  izquierda, derecha y abajo (dx, dy)
+
+  R5: canRotate() + applyRotation()
+  gestionan rotación en 90°
+
+  R7: isWithinBounds() impide que
+  el tetromino salga del tablero
+  al moverse
+
+  R8: isWithinBounds() también impide
+  que el tetromino salga del tablero
+  al rotar (usa getNextRotationBlocks)
+
+  R9: hasOverlap() impide solapamiento
+  con bloques fijados al mover o rotar
+
+  R16: isInitialPlacementValid() detecta
+  colisión al colocar pieza nueva
+  (condición de fin de juego)
+end note
+
+MovementCollisionManager --> BoardManager : consulta estado\nde la matriz 10x24
+MovementCollisionManager --> Tetromino : evalúa bloques\ny rotaciones
+Tetromino --> Block : compuesto por
+Tetromino --> TetrominoType : clasificado por
+Tetromino ..> Block : getNextRotationBlocks()\ncalcula bloques rotados\nsin mutar el estado
+
+@enduml

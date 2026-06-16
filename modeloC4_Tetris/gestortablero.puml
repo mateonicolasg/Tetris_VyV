@@ -1,0 +1,61 @@
+@startuml tetris-code-board
+title Diagrama de Código - Gestor de Tablero
+
+class BoardManager {
+    - grid: CellState[][]
+    - WIDTH: int = 10
+    - HEIGHT: int = 24
+    + initializeBoard(): void
+    + getCell(x: int, y: int): CellState
+    + isCellOccupied(x: int, y: int): boolean
+    + lockPiece(piece: Tetromino): void
+    + clearFullRows(): int
+    - findFullRows(): int[]
+    - removeRow(y: int): void
+    - shiftRowsDown(fromY: int): void
+}
+
+class Cell {
+    - state: CellState
+    + getState(): CellState
+    + setState(state: CellState): void
+    + isEmpty(): boolean
+}
+
+enum CellState {
+    EMPTY
+    OCCUPIED
+}
+
+note right of BoardManager
+  R1: initializeBoard() crea la cuadrícula
+  vacía antes de comenzar la partida
+
+  R2: WIDTH=10 y HEIGHT=24 definen
+  las dimensiones fijas del tablero
+
+  R10: lockPiece() fija el tetromino
+  cuando llega al fondo del tablero
+
+  R11: lockPiece() también fija el
+  tetromino cuando cae sobre bloques
+  ya fijados
+
+  R12: una celda en estado OCCUPIED
+  no puede ser modificada por
+  movimientos posteriores
+
+  R13: clearFullRows() detecta y
+  elimina filas completamente llenas
+  (10 bloques consecutivos)
+
+  R14: shiftRowsDown() desplaza hacia
+  abajo todas las filas superiores
+  a la fila eliminada
+end note
+
+BoardManager --> Cell : gestiona matriz\nde 10x24 celdas
+Cell --> CellState : tiene estado
+BoardManager ..> Tetromino : lockPiece() lee\nbloques del tetromino\npara fijarlos en grid
+
+@enduml
