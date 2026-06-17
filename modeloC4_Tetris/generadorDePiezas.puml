@@ -1,0 +1,74 @@
+@startuml tetris-code-piece-generator
+title Diagrama de Código - Generador de Tetrominos
+
+class PieceGenerator {
+    - nextPiece: Tetromino
+    - spawnX: int = 4
+    - spawnY: int = 0
+    + initialize(): void
+    + getCurrentSpawnPosition(): int[]
+    + getNextPiece(): Tetromino
+    + generateNewCurrent(): Tetromino
+    - createRandomTetromino(): Tetromino
+    - assignRandomColor(piece: Tetromino): void
+}
+
+class Tetromino {
+    - type: TetrominoType
+    - color: Color
+    - blocks: Block[]
+    - rotationState: int
+    - rotationMatrices: int[][][]
+    + getBlocks(): Block[]
+    + getNextRotationBlocks(): Block[]
+    + moveTo(dx: int, dy: int): void
+    + rotate(): void
+    + getType(): TetrominoType
+    + getColor(): Color
+}
+
+enum TetrominoType {
+    I
+    O
+    T
+    S
+    Z
+    J
+    L
+}
+
+class Color {
+    - r: int
+    - g: int
+    - b: int
+    + fromHex(hex: String): Color
+}
+
+note right of PieceGenerator
+  R3: generateNewCurrent() crea la pieza
+  y la posiciona en spawnX=4, spawnY=0
+  (parte superior y centro del tablero
+  de 10 columnas)
+
+  R15: getNextPiece() retorna la pieza
+  en cola. Tras fijar la actual,
+  GameController llama generateNewCurrent()
+  que promueve nextPiece a actual y
+  genera una nueva siguiente
+
+  R20: assignRandomColor() asigna un
+  color brillante aleatorio a cada
+  tetromino al momento de su creación
+
+  R27: nextPiece está siempre disponible
+  para que la UI la muestre como
+  vista previa del siguiente tetromino
+end note
+
+PieceGenerator --> Tetromino : crea y gestiona
+PieceGenerator --> TetrominoType : selecciona\naleatoriamente
+PieceGenerator --> Color : asigna color\naleatorio brillante
+Tetromino --> TetrominoType : clasificado por
+Tetromino --> Color : tiene color
+
+@enduml
